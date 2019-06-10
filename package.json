@@ -1,0 +1,29 @@
+{
+  "name": "circuitikzgui",
+  "version": "1.0.0",
+  "description": "Generate CircuiTikz code using a graphical interface",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunoeiterer/CircuiTikzGUI.git"
+  },
+  "keywords": [
+    "CircuiTikz",
+    "GUI",
+    "Electrical Circuits",
+    "Electronic Circuits"
+  ],
+  "author": "Bruno Eiterer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brunoeiterer/CircuiTikzGUI/issues"
+  },
+  "homepage": "https://github.com/brunoeiterer/CircuiTikzGUI#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^5.0.3"
+  }
+}
