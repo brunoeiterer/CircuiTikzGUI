@@ -10,9 +10,10 @@
 		<div class="base-container">
 			<div class="components-container">
 				<img src="images/resistor.svg" alt="resistor" onmouseover="OnComponentMouseOver();"
-				onmouseout="OnComponentMouseOut();">
+				onmouseout="OnComponentMouseOut();" onclick="OnComponentClick(this)">
 			</div>
-			<div class="circuit-container">
+			<div class="circuit-container" id="circuit-container" ondragenter="ElementDragEnter(event);"
+			ondragover="ElementDragOver(event);" ondrop="ElementDrop(event);">
 
 			</div>
 		</div>

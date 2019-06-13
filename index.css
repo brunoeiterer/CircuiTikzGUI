@@ -31,6 +31,7 @@ body {
 
 .component {
 	font-size: 12px;
+	position: absolute;
 }
 
 .circuit-container {
