@@ -39,11 +39,16 @@ body {
 	margin: 0;
 	height: 1000px;
 	width: 1600px;
+	--grid-size: 20px;
 	background:
-				repeating-linear-gradient(90deg, transparent 0px 39px, black 39px 40px),
-				repeating-linear-gradient( transparent 0px 39px, black 39px 40px),
-				repeating-linear-gradient(90deg, transparent 0px 19px, #d3d3d3 19px 20px),
-				repeating-linear-gradient(transparent 0px 19px, #d3d3d3 19px 20px);
+				repeating-linear-gradient(90deg, transparent 0px Calc(var(--grid-size)*2 - 1px),
+				black Calc(var(--grid-size)*2 - 1px) Calc(var(--grid-size)*2)),
+				repeating-linear-gradient( transparent 0px Calc(var(--grid-size)*2 - 1px),
+				black Calc(var(--grid-size)*2 - 1px) Calc(var(--grid-size)*2)),
+				repeating-linear-gradient(90deg, transparent 0px Calc(var(--grid-size) - 1px),
+				#d3d3d3 Calc(var(--grid-size) - 1px) var(--grid-size)),
+				repeating-linear-gradient(transparent 0px Calc(var(--grid-size) - 1px),
+				#d3d3d3 Calc(var(--grid-size) - 1px) var(--grid-size));
 	border-style: solid;
 	border-width: 1px 1px 1px 1px;
 	border-color: black;

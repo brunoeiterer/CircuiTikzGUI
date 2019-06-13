@@ -6,14 +6,14 @@
 		<link rel="stylesheet" href="index.css">
 		<script type="text/javascript" src="index.js"></script>
 	</head>
-	<body>
+	<body onload="preloadGhostImage();">
 		<div class="base-container">
-			<div class="components-container">
+			<div class="components-container" id="components-container">
 				<img src="images/resistor.svg" alt="resistor" onmouseover="OnComponentMouseOver();"
 				onmouseout="OnComponentMouseOut();" onclick="OnComponentClick(this)">
 			</div>
 			<div class="circuit-container" id="circuit-container" ondragenter="ElementDragEnter(event);"
-			ondragover="ElementDragOver(event);" ondrop="ElementDrop(event);">
+			ondragover="ElementDragOver(event);">
 
 			</div>
 		</div>
