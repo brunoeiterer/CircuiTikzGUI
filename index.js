@@ -21,7 +21,18 @@ function OnComponentClick(img) {
     newComponent.addEventListener("dragstart", ElementDragStart);
     newComponent.addEventListener("drag", ElementDrag);
     newComponent.addEventListener("dragend", ElementDragEnd);
-    document.getElementById("circuit-container").appendChild(newComponent);
+    document.addEventListener("dragover", ElementDragOver);
+
+    circuitContainer = document.getElementById("circuit-container");
+    circuitContainer.appendChild(newComponent);
+
+    /* put new component inside the grid */
+    newComponent.style.position = "absolute";
+    newComponent.style.left = circuitContainer.offsetLeft + ((circuitContainer.offsetWidth - 
+        parseInt(getComputedStyle(circuitContainer, null).getPropertyValue("background-size").split(" ")[0])) / 2) + 40 + "px";
+    newComponent.style.top = circuitContainer.offsetTop + ((circuitContainer.offsetHeight - 
+        parseInt(getComputedStyle(circuitContainer, null).getPropertyValue("background-size").split(" ")[1])) / 2) + 40 + "px";
+
 }
 
 function ElementDragStart(event) {
@@ -51,20 +62,46 @@ function ElementDragOver(event) {
 
 function ElementDrag(event) {
     var circuitContainer = document.getElementById("circuit-container");
-    var gridSize = parseInt(getComputedStyle(circuitContainer, null).getPropertyValue("--grid-size"));
+    var baseCircuitContainer = document.getElementById("base-circuit-container");
+    var gridSize = parseInt(getComputedStyle(circuitContainer).getPropertyValue("--grid-size"));
 
-    /* round to the nearest grid line and add 5 to compensate the size of the components-container */
-    var left = Math.round(event.pageX / gridSize) * gridSize + 5;
+    /* round to the nearest grid line. Subtract the parent offset because the child offset is relative to the parent and
+    add 5 to compensate the size of the components-container */
+    var left = Math.round((event.pageX - circuitContainer.offsetLeft) / gridSize) * gridSize + 5 + baseCircuitContainer.scrollLeft;
 
-    /* round to the nearest grid line and remove 8 to center and compensate the height difference between grid cells 
-    and the component */
-    var top = Math.round(event.pageY / gridSize) * gridSize - 8;
+    /* round to the nearest grid line. Subtract the parent offset because the child offset is relative to the parent and
+    remove 9 to center and compensate the height difference between grid cells and the component */
+    var top = Math.round((event.pageY - circuitContainer.offsetTop + baseCircuitContainer.scrollTop) / gridSize) * gridSize - 9;
+
+    /* keep component inside the circuit-container */
+    var backgroundWidth = parseInt(getComputedStyle(circuitContainer).getPropertyValue("background-size"));
+    var backgroundHeight = parseInt(getComputedStyle(circuitContainer).getPropertyValue("background-size").split(" ")[1]);
+    var backgroundOffsetLeft = ((circuitContainer.offsetWidth - backgroundWidth) / 2);
+    var backgroundOffsetTop = circuitContainer.offsetTop + ((circuitContainer.offsetHeight - backgroundHeight) / 2);
+
+    if(left < backgroundOffsetLeft) {
+        left = Math.round(backgroundOffsetLeft / gridSize) * gridSize;
+    }
+    /* subtract the component width to avoid having part of it out of bounds */
+    if(left > backgroundOffsetLeft + backgroundWidth - document.getElementById(localStorage.getItem("draggedElement")).offsetWidth) {
+        left = Math.round((backgroundOffsetLeft + backgroundWidth - 
+            document.getElementById(localStorage.getItem("draggedElement")).offsetWidth) / gridSize) * gridSize;
+    }
+    if(top < backgroundOffsetTop) {
+        top = Math.round((backgroundOffsetTop + 
+            document.getElementById(localStorage.getItem("draggedElement")).offsetHeight) / gridSize) * gridSize - 9;
+    }
+    /* subtract the gridSize from the botton coordinate to avoid having half of the component out of bounds */
+    if(top > backgroundOffsetTop + backgroundHeight - gridSize) {
+        top = Math.round((backgroundOffsetTop + backgroundHeight - 
+            document.getElementById(localStorage.getItem("draggedElement")).offsetHeight) / gridSize) * gridSize - 9;
+    }
 
     document.getElementById(localStorage.getItem("draggedElement")).style.left = left + "px";
     document.getElementById(localStorage.getItem("draggedElement")).style.top = top + "px";
 }
 
-/* This function loads the ghost image used when draggin elements. This is necessary because otherwise the image will only
+/* This function loads the ghost image used when dragging elements. This is necessary because otherwise the image will only
 be loaded after the first dragstart event is fired, and so will not be shown on the first drag event */
 function preloadGhostImage() {
     var ghostImage = new Image();
