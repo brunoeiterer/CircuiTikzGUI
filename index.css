@@ -36,6 +36,12 @@ body {
 	position: absolute;
 }
 
+.component:focus {
+	outline: #0099ff;
+	outline-width: 2px;
+	outline-style: dashed;
+}
+
 .base-circuit-container {
 	display: grid;
 	align-items: center;

@@ -18,6 +18,7 @@ function OnComponentClick(img) {
     newComponent.id = img.src.slice(0, -4) + componentCounter.toString();
     newComponent.src = img.src;
     newComponent.className = "component"
+    newComponent.tabIndex = 0;
     newComponent.addEventListener("dragstart", ElementDragStart);
     newComponent.addEventListener("drag", ElementDrag);
     newComponent.addEventListener("dragend", ElementDragEnd);
