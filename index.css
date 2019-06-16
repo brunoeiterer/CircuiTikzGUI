@@ -55,11 +55,23 @@ body {
 	left: -3px;
 }
 
+.component-left-circle:hover {
+	font-size: 18px;
+	top: -2px;
+	left: -5px;
+}
+
 .component-right-circle {
 	position: absolute;
 	font-size: 12px;
 	top: -50%;
 	left: 57px;
+}
+
+.component-right-circle:hover {
+	font-size: 18px;
+	top: -2px;
+	left: 55px;
 }
  
 .base-circuit-container {
