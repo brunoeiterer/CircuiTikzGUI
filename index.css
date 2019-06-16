@@ -42,6 +42,26 @@ body {
 	outline-style: dashed;
 }
 
+.component-container {
+	position: absolute;
+	text-align: center;
+	background: transparent;
+}
+
+.component-left-circle {
+	position: absolute;
+	font-size: 12px;
+	top: -50%;
+	left: -3px;
+}
+
+.component-right-circle {
+	position: absolute;
+	font-size: 12px;
+	top: -50%;
+	left: 57px;
+}
+ 
 .base-circuit-container {
 	display: grid;
 	align-items: center;

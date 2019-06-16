@@ -1,12 +1,12 @@
-function OnComponentMouseOver() {
+function OnNewComponentMouseOver() {
     document.body.style.cursor = "pointer";
 }
 
-function OnComponentMouseOut() {
+function OnNewComponentMouseOut() {
     document.body.style.cursor = "default"
 }
 
-function OnComponentClick(img) {
+function OnNewComponentClick(img) {
     var children = document.getElementById("circuit-container").children;
     var componentCounter = 0;
     for(var i = 0; i < children.length; i++) {
@@ -19,29 +19,37 @@ function OnComponentClick(img) {
     newComponent.src = img.src;
     newComponent.className = "component"
     newComponent.tabIndex = 0;
-    newComponent.addEventListener("dragstart", ElementDragStart);
-    newComponent.addEventListener("drag", ElementDrag);
-    newComponent.addEventListener("dragend", ElementDragEnd);
+
     document.addEventListener("dragover", ElementDragOver);
 
+    var newComponentContainer = document.createElement("div");
+    newComponentContainer.className = "component-container";
+    newComponentContainer.id = img.src.slice(0, -4) + "-container" + componentCounter.toString();
+    newComponentContainer.appendChild(newComponent);
+    newComponentContainer.addEventListener("mouseenter", OnComponentMouseEnter);
+    newComponentContainer.addEventListener("mouseleave", OnComponentMouseLeave);
+    newComponentContainer.addEventListener("dragstart", ElementDragStart);
+    newComponentContainer.addEventListener("drag", ElementDrag);
+    newComponentContainer.addEventListener("dragend", ElementDragEnd);
+
     circuitContainer = document.getElementById("circuit-container");
-    circuitContainer.appendChild(newComponent);
+    circuitContainer.appendChild(newComponentContainer);
 
     /* put new component inside the grid */
-    newComponent.style.position = "absolute";
-    newComponent.style.left = circuitContainer.offsetLeft + ((circuitContainer.offsetWidth - 
+    newComponentContainer.style.position = "absolute";
+    newComponentContainer.style.left = circuitContainer.offsetLeft + ((circuitContainer.offsetWidth - 
         parseInt(getComputedStyle(circuitContainer, null).getPropertyValue("background-size").split(" ")[0])) / 2) + 40 + "px";
-    newComponent.style.top = circuitContainer.offsetTop + ((circuitContainer.offsetHeight - 
+    newComponentContainer.style.top = circuitContainer.offsetTop + ((circuitContainer.offsetHeight - 
         parseInt(getComputedStyle(circuitContainer, null).getPropertyValue("background-size").split(" ")[1])) / 2) + 40 + "px";
 
 }
 
 function ElementDragStart(event) {
     /* store the target id in the data transfer object */
-    event.dataTransfer.setData("text/plain", event.target.id);
+    event.dataTransfer.setData("text/plain", event.target.parentElement.id);
 
     /* store the target id in the local storage for events that can't access the data transfer object */
-    localStorage.setItem("draggedElement", event.target.id);
+    localStorage.setItem("draggedElement", event.target.parentElement.id);
 
     /* remove the ghost image when dragging */
     var ghostImage = new Image();
@@ -107,4 +115,23 @@ be loaded after the first dragstart event is fired, and so will not be shown on 
 function preloadGhostImage() {
     var ghostImage = new Image();
     ghostImage.src = "images/blank-ghost-image.svg";
+}
+
+function OnComponentMouseEnter(event) {
+    var leftCircle = document.createElement("div");
+    leftCircle.className = "component-left-circle";
+    leftCircle.innerText = "●";
+    leftCircle.id = event.target.children[0].id + "left-circle";
+    event.target.appendChild(leftCircle);
+
+    var rightCircle = document.createElement("div");
+    rightCircle.className = "component-right-circle";
+    rightCircle.innerText = "●";
+    rightCircle.id = event.target.children[0].id + "right-circle";
+    event.target.appendChild(rightCircle);
+}
+
+function OnComponentMouseLeave(event) {
+    event.target.removeChild(document.getElementById(event.target.children[0].id + "left-circle"));
+    event.target.removeChild(document.getElementById(event.target.children[0].id + "right-circle"));
 }
