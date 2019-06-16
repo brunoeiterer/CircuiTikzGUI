@@ -19,6 +19,8 @@ function OnNewComponentClick(img) {
     newComponent.src = img.src;
     newComponent.className = "component"
     newComponent.tabIndex = 0;
+    newComponent.addEventListener("focus", OnComponentFocus);
+    newComponent.addEventListener("blur", OnComponentBlur);
 
     document.addEventListener("dragover", ElementDragOver);
 
@@ -117,20 +119,43 @@ function preloadGhostImage() {
 }
 
 function OnComponentMouseEnter(event) {
+    if(!document.activeElement.isEqualNode(event.target.children[0])) {
+        var leftCircle = document.createElement("div");
+        leftCircle.className = "component-left-circle";
+        leftCircle.innerText = "●";
+        leftCircle.id = event.target.children[0].id + "left-circle";
+        event.target.appendChild(leftCircle);
+    
+        var rightCircle = document.createElement("div");
+        rightCircle.className = "component-right-circle";
+        rightCircle.innerText = "●";
+        rightCircle.id = event.target.children[0].id + "right-circle";
+        event.target.appendChild(rightCircle);
+    }
+}
+
+function OnComponentMouseLeave(event) {
+    if(!document.activeElement.isEqualNode(event.target.children[0])) {
+        event.target.removeChild(document.getElementById(event.target.children[0].id + "left-circle"));
+        event.target.removeChild(document.getElementById(event.target.children[0].id + "right-circle"));
+    }
+}
+
+function OnComponentFocus(event) {
     var leftCircle = document.createElement("div");
     leftCircle.className = "component-left-circle";
     leftCircle.innerText = "●";
     leftCircle.id = event.target.children[0].id + "left-circle";
-    event.target.appendChild(leftCircle);
+    event.target.parentElement.appendChild(leftCircle);
 
     var rightCircle = document.createElement("div");
     rightCircle.className = "component-right-circle";
     rightCircle.innerText = "●";
-    rightCircle.id = event.target.children[0].id + "right-circle";
-    event.target.appendChild(rightCircle);
+    rightCircle.id = event.target.id + "right-circle";
+    event.target.parentElement.appendChild(rightCircle);
 }
 
-function OnComponentMouseLeave(event) {
-    event.target.removeChild(document.getElementById(event.target.children[0].id + "left-circle"));
-    event.target.removeChild(document.getElementById(event.target.children[0].id + "right-circle"));
+function OnComponentBlur(event) {
+    event.target.parentElement.removeChild(document.getElementById(event.target.id + "left-circle"));
+    event.target.parentElement.removeChild(document.getElementById(event.target.id + "right-circle"));
 }
