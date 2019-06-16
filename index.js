@@ -87,23 +87,22 @@ function ElementDrag(event) {
     var backgroundHeight = parseInt(getComputedStyle(circuitContainer).getPropertyValue("background-size").split(" ")[1]);
     var backgroundOffsetLeft = ((circuitContainer.offsetWidth - backgroundWidth) / 2);
     var backgroundOffsetTop = circuitContainer.offsetTop + ((circuitContainer.offsetHeight - backgroundHeight) / 2);
+    var componentWidth = document.getElementById(localStorage.getItem("draggedElement")).children[0].offsetWidth;
+    var componentHeight = document.getElementById(localStorage.getItem("draggedElement")).children[0].offsetHeight;
 
     if(left < backgroundOffsetLeft) {
         left = Math.round(backgroundOffsetLeft / gridSize) * gridSize;
     }
     /* subtract the component width to avoid having part of it out of bounds */
-    if(left > backgroundOffsetLeft + backgroundWidth - document.getElementById(localStorage.getItem("draggedElement")).offsetWidth) {
-        left = Math.round((backgroundOffsetLeft + backgroundWidth - 
-            document.getElementById(localStorage.getItem("draggedElement")).offsetWidth) / gridSize) * gridSize;
+    if(left > backgroundOffsetLeft + backgroundWidth - componentWidth) {
+        left = Math.round((backgroundOffsetLeft + backgroundWidth - componentWidth) / gridSize) * gridSize;
     }
     if(top < backgroundOffsetTop) {
-        top = Math.round((backgroundOffsetTop + 
-            document.getElementById(localStorage.getItem("draggedElement")).offsetHeight) / gridSize) * gridSize - 9;
+        top = Math.round((backgroundOffsetTop + componentHeight) / gridSize) * gridSize - 9;
     }
     /* subtract the gridSize from the botton coordinate to avoid having half of the component out of bounds */
     if(top > backgroundOffsetTop + backgroundHeight - gridSize) {
-        top = Math.round((backgroundOffsetTop + backgroundHeight - 
-            document.getElementById(localStorage.getItem("draggedElement")).offsetHeight) / gridSize) * gridSize - 9;
+        top = Math.round((backgroundOffsetTop + backgroundHeight - componentHeight) / gridSize) * gridSize - 9;
     }
 
     document.getElementById(localStorage.getItem("draggedElement")).style.left = left + "px";
