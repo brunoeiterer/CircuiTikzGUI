@@ -118,22 +118,28 @@ function preloadGhostImage() {
     ghostImage.src = "images/blank-ghost-image.svg";
 }
 
+/* show connection guides when hovering over component
+   connection guides are also shown when the component is focused, so a check is perfomed to avoid showing duplicates */
 function OnComponentMouseEnter(event) {
     if(!document.activeElement.isEqualNode(event.target.children[0])) {
         var leftCircle = document.createElement("div");
         leftCircle.className = "component-left-circle";
         leftCircle.innerText = "●";
         leftCircle.id = event.target.children[0].id + "left-circle";
+        leftCircle.addEventListener("click", OnComponentConnectionClick);
         event.target.appendChild(leftCircle);
     
         var rightCircle = document.createElement("div");
         rightCircle.className = "component-right-circle";
         rightCircle.innerText = "●";
         rightCircle.id = event.target.children[0].id + "right-circle";
+        rightCircle.addEventListener("click", OnComponentConnectionClick);
         event.target.appendChild(rightCircle);
     }
 }
 
+/* hide connection guides when mouse is not hovering over the component anymore
+   a check is performed to avoid removing the connection guides if the component is still focused */
 function OnComponentMouseLeave(event) {
     if(!document.activeElement.isEqualNode(event.target.children[0])) {
         event.target.removeChild(document.getElementById(event.target.children[0].id + "left-circle"));
@@ -141,21 +147,65 @@ function OnComponentMouseLeave(event) {
     }
 }
 
+/* show connection guides when component is focused */
 function OnComponentFocus(event) {
     var leftCircle = document.createElement("div");
     leftCircle.className = "component-left-circle";
     leftCircle.innerText = "●";
     leftCircle.id = event.target.children[0].id + "left-circle";
+    leftCircle.addEventListener("click", OnComponentConnectionClick);
     event.target.parentElement.appendChild(leftCircle);
 
     var rightCircle = document.createElement("div");
     rightCircle.className = "component-right-circle";
     rightCircle.innerText = "●";
     rightCircle.id = event.target.id + "right-circle";
+    rightCircle.addEventListener("click", OnComponentConnectionClick);
     event.target.parentElement.appendChild(rightCircle);
 }
 
+/* hide connection guides when component loses focus */
 function OnComponentBlur(event) {
     event.target.parentElement.removeChild(document.getElementById(event.target.id + "left-circle"));
     event.target.parentElement.removeChild(document.getElementById(event.target.id + "right-circle"));
+}
+
+/* start drawing a connection when user clicks on a connection guide */
+function OnComponentConnectionClick(event) {
+    var circuitContainer = document.getElementById("circuit-container");
+    circuitContainer.addEventListener("mousemove", OnComponentConnectionMove);
+    var gridSize = parseInt(getComputedStyle(circuitContainer).getPropertyValue("--grid-size"));
+    var newConnection = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    var newLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    newLine.id = event.target.id + "connection";
+    var x = ((event.pageX + circuitContainer.scrollLeft - circuitContainer.offsetLeft) / gridSize) * gridSize;
+    var y = ((event.pageY + circuitContainer.scrollTop - circuitContainer.offsetTop) / gridSize) * gridSize;
+    newLine.setAttribute("x1", x + "px");
+    newLine.setAttribute("y1", y + "px");
+    newLine.style.stroke = "black";
+    newLine.style.strokeWidth = 1 + "px";
+    newConnection.appendChild(newLine);
+    circuitContainer.appendChild(newConnection);
+
+    localStorage.setItem("newLineID", newLine.id);
+}
+
+/* draw a connection when a user has clicked on a connection guide and moves the mouse */
+function OnComponentConnectionMove(event) {
+    var circuitContainer = document.getElementById("circuit-container");
+    var connection = document.getElementById(localStorage.getItem("newLineID"));
+    var gridSize = parseInt(getComputedStyle(circuitContainer).getPropertyValue("--grid-size"));
+
+    /* snap connection to grid */
+    var x2 = Math.round(((event.pageX + circuitContainer.scrollLeft - circuitContainer.offsetLeft) / gridSize)) * gridSize;
+    var y2 = Math.round(((event.pageY + circuitContainer.scrollTop - circuitContainer.offsetTop) / gridSize)) * gridSize;
+    connection.setAttribute("x2", x2 + "px");
+    connection.setAttribute("y2", y2 + "px");
+
+    /* line must fit inside svg */
+    /* TODO: check why svg size must be 300 px bigger the line */
+    var svgWidth = Math.abs(parseInt(connection.getAttribute("x2")) - parseInt(connection.getAttribute("x1"))) + 300;
+    var svgHeight = Math.abs(parseInt(connection.getAttribute("y2")) - parseInt(connection.getAttribute("y1"))) + 300;
+    connection.parentElement.setAttribute("width", svgWidth + "px");
+    connection.parentElement.setAttribute("height", svgHeight + "px");
 }
