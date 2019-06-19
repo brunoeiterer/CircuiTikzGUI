@@ -192,6 +192,9 @@ function OnComponentConnectionClick(event) {
     newConnection.appendChild(newLine);
     circuitContainer.appendChild(newConnection);
 
+    event.stopPropagation();
+    circuitContainer.addEventListener("click", OnComponentConnectionEnd);
+
     localStorage.setItem("newLineID", newLine.id);
 }
 
@@ -215,4 +218,9 @@ function OnComponentConnectionMove(event) {
     connection.parentElement.setAttribute("y", parseInt(connection.getAttribute("y1")) - svgHeight / 2);
     connection.parentElement.setAttribute("width", svgWidth + "px");
     connection.parentElement.setAttribute("height", svgHeight + "px");
+}
+
+/* finish the connection drawing */
+function OnComponentConnectionEnd(event) {
+    circuitContainer.removeEventListener("mousemove", OnComponentConnectionMove);
 }
