@@ -9,8 +9,9 @@ function OnNewComponentMouseOut() {
 function OnNewComponentClick(img) {
     var children = document.getElementById("circuit-container").children;
     var componentCounter = 0;
+    
     for(var i = 0; i < children.length; i++) {
-        if(children[i].id.slice(0, -1) === img.src.slice(0, -4)) {
+        if(children[i].getElementsByTagName("img")[0].id.slice(0, -1) === img.src.slice(0, -4)) {
             componentCounter++;
         }
     }
@@ -123,18 +124,18 @@ function preloadGhostImage() {
 /* show connection guides when hovering over component
    connection guides are also shown when the component is focused, so a check is perfomed to avoid showing duplicates */
 function OnComponentMouseEnter(event) {
-    if(!document.activeElement.isEqualNode(event.target.children[0])) {
+    if(!document.activeElement.isEqualNode(event.target.getElementsByTagName("img")[0])) {
         var leftCircle = document.createElement("div");
         leftCircle.className = "component-left-circle";
         leftCircle.innerText = "●";
-        leftCircle.id = event.target.children[0].id + "left-circle";
+        leftCircle.id = event.target.getElementsByTagName("img")[0].id + "left-circle";
         leftCircle.addEventListener("click", OnComponentConnectionClick);
         event.target.appendChild(leftCircle);
     
         var rightCircle = document.createElement("div");
         rightCircle.className = "component-right-circle";
         rightCircle.innerText = "●";
-        rightCircle.id = event.target.children[0].id + "right-circle";
+        rightCircle.id = event.target.getElementsByTagName("img")[0].id + "right-circle";
         rightCircle.addEventListener("click", OnComponentConnectionClick);
         event.target.appendChild(rightCircle);
     }
@@ -143,27 +144,29 @@ function OnComponentMouseEnter(event) {
 /* hide connection guides when mouse is not hovering over the component anymore
    a check is performed to avoid removing the connection guides if the component is still focused */
 function OnComponentMouseLeave(event) {
-    if(!document.activeElement.isEqualNode(event.target.children[0])) {
-        event.target.removeChild(document.getElementById(event.target.children[0].id + "left-circle"));
-        event.target.removeChild(document.getElementById(event.target.children[0].id + "right-circle"));
+    if(!document.activeElement.isEqualNode(event.target.getElementsByTagName("img")[0])) {
+        event.target.removeChild(document.getElementById(event.target.getElementsByTagName("img")[0].id + "left-circle"));
+        event.target.removeChild(document.getElementById(event.target.getElementsByTagName("img")[0].id + "right-circle"));
     }
 }
 
 /* show connection guides when component is focused */
 function OnComponentFocus(event) {
-    var leftCircle = document.createElement("div");
-    leftCircle.className = "component-left-circle";
-    leftCircle.innerText = "●";
-    leftCircle.id = event.target.children[0].id + "left-circle";
-    leftCircle.addEventListener("click", OnComponentConnectionClick);
-    event.target.parentElement.appendChild(leftCircle);
-
-    var rightCircle = document.createElement("div");
-    rightCircle.className = "component-right-circle";
-    rightCircle.innerText = "●";
-    rightCircle.id = event.target.id + "right-circle";
-    rightCircle.addEventListener("click", OnComponentConnectionClick);
-    event.target.parentElement.appendChild(rightCircle);
+    if(event.target.parentElement.getElementsByTagName("div").length == 0) {
+        var leftCircle = document.createElement("div");
+        leftCircle.className = "component-left-circle";
+        leftCircle.innerText = "●";
+        leftCircle.id = event.target.id + "left-circle";
+        leftCircle.addEventListener("click", OnComponentConnectionClick);
+        event.target.parentElement.appendChild(leftCircle);
+    
+        var rightCircle = document.createElement("div");
+        rightCircle.className = "component-right-circle";
+        rightCircle.innerText = "●";
+        rightCircle.id = event.target.id + "right-circle";
+        rightCircle.addEventListener("click", OnComponentConnectionClick);
+        event.target.parentElement.appendChild(rightCircle);
+    }
 }
 
 /* hide connection guides when component loses focus */
