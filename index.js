@@ -38,12 +38,14 @@ function OnNewComponentClick(img) {
     circuitContainer.appendChild(newComponentContainer);
 
     /* put new component inside the grid */
+    var left = circuitContainer.offsetLeft + ((circuitContainer.offsetWidth - 
+        parseInt(getComputedStyle(circuitContainer, null).getPropertyValue("background-size").split(" ")[0])) / 2) + 40;
+    var top = circuitContainer.offsetTop + ((circuitContainer.offsetHeight - 
+        parseInt(getComputedStyle(circuitContainer, null).getPropertyValue("background-size").split(" ")[1])) / 2) + 40;
     newComponentContainer.style.position = "absolute";
-    newComponentContainer.style.left = circuitContainer.offsetLeft + ((circuitContainer.offsetWidth - 
-        parseInt(getComputedStyle(circuitContainer, null).getPropertyValue("background-size").split(" ")[0])) / 2) + 40 + "px";
-    newComponentContainer.style.top = circuitContainer.offsetTop + ((circuitContainer.offsetHeight - 
-        parseInt(getComputedStyle(circuitContainer, null).getPropertyValue("background-size").split(" ")[1])) / 2) + 40 + "px";
-
+    var gridSize = parseInt(getComputedStyle(circuitContainer).getPropertyValue("--grid-size"));
+    newComponentContainer.style.left = (Math.round(left / gridSize)) * gridSize + "px";
+    newComponentContainer.style.top =  (Math.round(top / gridSize)) * gridSize + "px";
 }
 
 function ElementDragStart(event) {
@@ -78,7 +80,7 @@ function ElementDrag(event) {
 
     /* round to the nearest grid line. Subtract the parent offset because the child offset is relative to the parent and
     add 5 to compensate the size of the components-container */
-    var left = Math.round((event.pageX - circuitContainer.offsetLeft) / gridSize) * gridSize + 5 + baseCircuitContainer.scrollLeft;
+    var left = Math.round((event.pageX - circuitContainer.offsetLeft) / gridSize) * gridSize + baseCircuitContainer.scrollLeft;
 
     /* round to the nearest grid line. Subtract the parent offset because the child offset is relative to the parent and
     remove 9 to center and compensate the height difference between grid cells and the component */
