@@ -183,8 +183,8 @@ function OnComponentConnectionClick(event) {
     var newConnection = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     var newLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
     newLine.id = event.target.id + "connection";
-    var x = ((event.pageX + circuitContainer.scrollLeft - circuitContainer.offsetLeft) / gridSize) * gridSize;
-    var y = ((event.pageY + circuitContainer.scrollTop - circuitContainer.offsetTop) / gridSize) * gridSize;
+    var x = Math.round((event.pageX + circuitContainer.scrollLeft - circuitContainer.offsetLeft) / gridSize) * gridSize;
+    var y = Math.round((event.pageY + circuitContainer.scrollTop - circuitContainer.offsetTop) / gridSize) * gridSize;
     newLine.setAttribute("x1", x + "px");
     newLine.setAttribute("y1", y + "px");
     newLine.style.stroke = "black";
@@ -208,9 +208,11 @@ function OnComponentConnectionMove(event) {
     connection.setAttribute("y2", y2 + "px");
 
     /* line must fit inside svg */
-    /* TODO: check why svg size must be 300 px bigger the line */
-    var svgWidth = Math.abs(parseInt(connection.getAttribute("x2")) - parseInt(connection.getAttribute("x1"))) + 300;
-    var svgHeight = Math.abs(parseInt(connection.getAttribute("y2")) - parseInt(connection.getAttribute("y1"))) + 300;
+    /* TODO: check why svg size must be bigger than the line */
+    var svgWidth = Math.abs(parseInt(connection.getAttribute("x2")) - parseInt(connection.getAttribute("x1"))) + 10000;
+    var svgHeight = Math.abs(parseInt(connection.getAttribute("y2")) - parseInt(connection.getAttribute("y1"))) + 10000;
+    connection.parentElement.setAttribute("x", parseInt(connection.getAttribute("x1")) - svgWidth / 2);
+    connection.parentElement.setAttribute("y", parseInt(connection.getAttribute("y1")) - svgHeight / 2);
     connection.parentElement.setAttribute("width", svgWidth + "px");
     connection.parentElement.setAttribute("height", svgHeight + "px");
 }
