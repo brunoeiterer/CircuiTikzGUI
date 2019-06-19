@@ -46,7 +46,7 @@ function OnNewComponentClick(img) {
     newComponentContainer.style.position = "absolute";
     var gridSize = parseInt(getComputedStyle(circuitContainer).getPropertyValue("--grid-size"));
     newComponentContainer.style.left = (Math.round(left / gridSize)) * gridSize + "px";
-    newComponentContainer.style.top =  (Math.round(top / gridSize)) * gridSize + "px";
+    newComponentContainer.style.top =  (Math.round(top / gridSize)) * gridSize - 9 + "px";
 }
 
 function ElementDragStart(event) {
