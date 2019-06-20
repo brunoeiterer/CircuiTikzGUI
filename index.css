@@ -110,6 +110,11 @@ body {
 	background-repeat: no-repeat;
 }
 
+.connections-container {
+	height: 1000px;
+	width: 2000px;
+}
+
 header {
 	position: absolute;
 	width: 500px;

@@ -11,8 +11,10 @@ function OnNewComponentClick(img) {
     var componentCounter = 0;
     
     for(var i = 0; i < children.length; i++) {
-        if(children[i].getElementsByTagName("img")[0].id.slice(0, -1) === img.src.slice(0, -4)) {
-            componentCounter++;
+        for(var j = 0; j < children[i].getElementsByTagName("img").length; j++) {
+            if(children[i].getElementsByTagName("img")[0].id.slice(0, -1) === img.src.slice(0, -4)) {
+                componentCounter++;
+            }
         }
     }
     var newComponent = document.createElement("img");
@@ -177,31 +179,33 @@ function OnComponentBlur(event) {
 
 /* start drawing a connection when user clicks on a connection guide */
 function OnComponentConnectionClick(event) {
+    event.stopPropagation();
     var circuitContainer = document.getElementById("circuit-container");
     circuitContainer.addEventListener("mousemove", OnComponentConnectionMove);
-    var gridSize = parseInt(getComputedStyle(circuitContainer).getPropertyValue("--grid-size"));
-    var newConnection = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    var newLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    newLine.id = event.target.id + "connection";
-    var x = Math.round((event.pageX + circuitContainer.scrollLeft - circuitContainer.offsetLeft) / gridSize) * gridSize;
-    var y = Math.round((event.pageY + circuitContainer.scrollTop - circuitContainer.offsetTop) / gridSize) * gridSize;
-    newLine.setAttribute("x1", x + "px");
-    newLine.setAttribute("y1", y + "px");
-    newLine.style.stroke = "black";
-    newLine.style.strokeWidth = 1 + "px";
-    newConnection.appendChild(newLine);
-    circuitContainer.appendChild(newConnection);
-
-    event.stopPropagation();
     circuitContainer.addEventListener("click", OnComponentConnectionEnd);
 
-    localStorage.setItem("newLineID", newLine.id);
+    var gridSize = parseInt(getComputedStyle(circuitContainer).getPropertyValue("--grid-size"));
+
+    var newConnection = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    newConnection.id = event.target.id + "connection";
+    var x = Math.round((event.pageX + circuitContainer.scrollLeft - circuitContainer.offsetLeft) / gridSize) * gridSize;
+    var y = Math.round((event.pageY + circuitContainer.scrollTop - circuitContainer.offsetTop) / gridSize) * gridSize;
+
+    newConnection.setAttribute("x1", x + "px");
+    newConnection.setAttribute("y1", y + "px");
+    newConnection.style.stroke = "black";
+    newConnection.style.strokeWidth = 1 + "px";
+
+    var connectionsContainer = document.getElementById("connections-container");
+    connectionsContainer.appendChild(newConnection);
+
+    localStorage.setItem("newConnectionID", newConnection.id);
 }
 
 /* draw a connection when a user has clicked on a connection guide and moves the mouse */
 function OnComponentConnectionMove(event) {
     var circuitContainer = document.getElementById("circuit-container");
-    var connection = document.getElementById(localStorage.getItem("newLineID"));
+    var connection = document.getElementById(localStorage.getItem("newConnectionID"));
     var gridSize = parseInt(getComputedStyle(circuitContainer).getPropertyValue("--grid-size"));
 
     /* snap connection to grid */
@@ -209,15 +213,6 @@ function OnComponentConnectionMove(event) {
     var y2 = Math.round(((event.pageY + circuitContainer.scrollTop - circuitContainer.offsetTop) / gridSize)) * gridSize;
     connection.setAttribute("x2", x2 + "px");
     connection.setAttribute("y2", y2 + "px");
-
-    /* line must fit inside svg */
-    /* TODO: check why svg size must be bigger than the line */
-    var svgWidth = Math.abs(parseInt(connection.getAttribute("x2")) - parseInt(connection.getAttribute("x1"))) + 10000;
-    var svgHeight = Math.abs(parseInt(connection.getAttribute("y2")) - parseInt(connection.getAttribute("y1"))) + 10000;
-    connection.parentElement.setAttribute("x", parseInt(connection.getAttribute("x1")) - svgWidth / 2);
-    connection.parentElement.setAttribute("y", parseInt(connection.getAttribute("y1")) - svgHeight / 2);
-    connection.parentElement.setAttribute("width", svgWidth + "px");
-    connection.parentElement.setAttribute("height", svgHeight + "px");
 }
 
 /* finish the connection drawing */
