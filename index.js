@@ -169,6 +169,8 @@ function OnComponentFocus(event) {
         rightCircle.addEventListener("click", OnComponentConnectionClick);
         event.target.parentElement.appendChild(rightCircle);
     }
+
+    document.addEventListener("keydown", OnKeyDownEvent);
 }
 
 /* hide connection guides when component loses focus */
@@ -218,4 +220,14 @@ function OnComponentConnectionMove(event) {
 /* finish the connection drawing */
 function OnComponentConnectionEnd(event) {
     circuitContainer.removeEventListener("mousemove", OnComponentConnectionMove);
+}
+
+function OnKeyDownEvent(event) {
+    if(event.keyCode == 46) {
+        var focusedComponent = document.activeElement;
+        var focusedComponentContainer = focusedComponent.parentElement;
+        focusedComponentContainer.removeChild(focusedComponent);
+        focusedComponentContainer.parentElement.removeChild(focusedComponentContainer);
+        document.removeEventListener("keydown");
+    }
 }
