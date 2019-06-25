@@ -74,36 +74,11 @@ body {
 	left: 55px;
 }
 
-.component-upper-left-rotation-arrow {
+.component-rotation-arrow {
 	position: absolute;
-	transform: rotate(-45deg);
 	font-size: 18px;
-	top: -12px;
-	left: -8px;
-}
-
-.component-upper-right-rotation-arrow {
-	position: absolute;
-	transform: rotate(45deg) scaleY(-1);
-	font-size: 18px;
-	top: -14px;
-	left: 55px;
-}
-
-.component-bottom-left-rotation-arrow {
-	position: absolute;
-	transform: rotate(45deg);
-	font-size: 18px;
-	top: 8px;
-	left: -10px;
-}
-
-.component-bottom-right-rotation-arrow {
-	position: absolute;
-	transform: rotate(-45deg);
-	font-size: 18px;
-	top: 8px;
-	left: 55px;
+	top: -20px;
+	left: 22px;
 }
  
 .base-circuit-container {

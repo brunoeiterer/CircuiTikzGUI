@@ -127,37 +127,14 @@ function preloadGhostImage() {
    connection guides are also shown when the component is focused, so a check is perfomed to avoid showing duplicates */
 function OnComponentMouseEnter(event) {
     if(!document.activeElement.isEqualNode(event.target.getElementsByTagName("img")[0])) {
-        var upperRightRotationArrow = document.createElement("div");
-        upperRightRotationArrow.className = "component-upper-right-rotation-arrow";
-        upperRightRotationArrow.innerHTML = "⤻";
-        upperRightRotationArrow.id = event.target.getElementsByTagName("img")[0].id + "upper-right-rotation-arrow";
-        upperRightRotationArrow.addEventListener("mouseenter", OnComponentRotationArrowEnter);
-        upperRightRotationArrow.addEventListener("mouseleave", OnComponentRotationArrowLeave);
-        event.target.appendChild(upperRightRotationArrow);
-
-        var upperLeftRotationArrow = document.createElement("div");
-        upperLeftRotationArrow.className = "component-upper-left-rotation-arrow";
-        upperLeftRotationArrow.innerHTML = "⤺";
-        upperLeftRotationArrow.id = event.target.getElementsByTagName("img")[0].id + "upper-left-rotation-arrow";
-        upperLeftRotationArrow.addEventListener("mouseenter", OnComponentRotationArrowEnter);
-        upperLeftRotationArrow.addEventListener("mouseleave", OnComponentRotationArrowLeave);
-        event.target.appendChild(upperLeftRotationArrow);
-        
-        var bottomLeftRotationArrow = document.createElement("div");
-        bottomLeftRotationArrow.className = "component-bottom-left-rotation-arrow";
-        bottomLeftRotationArrow.innerHTML = "⤻";
-        bottomLeftRotationArrow.id = event.target.getElementsByTagName("img")[0].id + "bottom-left-rotation-arrow";
-        bottomLeftRotationArrow.addEventListener("mouseenter", OnComponentRotationArrowEnter);
-        bottomLeftRotationArrow.addEventListener("mouseleave", OnComponentRotationArrowLeave);
-        event.target.appendChild(bottomLeftRotationArrow);
-
-        var bottomRightRotationArrow = document.createElement("div");
-        bottomRightRotationArrow.className = "component-bottom-right-rotation-arrow";
-        bottomRightRotationArrow.innerHTML = "⤻";
-        bottomRightRotationArrow.id = event.target.getElementsByTagName("img")[0].id + "bottom-right-rotation-arrow";
-        bottomRightRotationArrow.addEventListener("mouseenter", OnComponentRotationArrowEnter);
-        bottomRightRotationArrow.addEventListener("mouseleave", OnComponentRotationArrowLeave);
-        event.target.appendChild(bottomRightRotationArrow);
+        var RotationArrow = document.createElement("div");
+        RotationArrow.className = "component-rotation-arrow";
+        RotationArrow.innerHTML = "↻";
+        RotationArrow.id = event.target.getElementsByTagName("img")[0].id + "rotation-arrow";
+        RotationArrow.addEventListener("mouseenter", OnComponentRotationArrowEnter);
+        RotationArrow.addEventListener("mouseleave", OnComponentRotationArrowLeave);
+        RotationArrow.addEventListener("click", OnComponentRotationArrowClick);
+        event.target.appendChild(RotationArrow);
 
         var leftCircle = document.createElement("div");
         leftCircle.className = "component-left-circle";
@@ -181,51 +158,21 @@ function OnComponentMouseLeave(event) {
     if(!document.activeElement.isEqualNode(event.target.getElementsByTagName("img")[0])) {
         event.target.removeChild(document.getElementById(event.target.getElementsByTagName("img")[0].id + "left-circle"));
         event.target.removeChild(document.getElementById(event.target.getElementsByTagName("img")[0].id + "right-circle"));
-        event.target.removeChild(
-            document.getElementById(event.target.getElementsByTagName("img")[0].id + "upper-right-rotation-arrow"));
-        event.target.removeChild(
-            document.getElementById(event.target.getElementsByTagName("img")[0].id + "upper-left-rotation-arrow"));
-        event.target.removeChild(
-        document.getElementById(event.target.getElementsByTagName("img")[0].id + "bottom-left-rotation-arrow"));
-        event.target.removeChild(
-            document.getElementById(event.target.getElementsByTagName("img")[0].id + "bottom-right-rotation-arrow"));
+        event.target.removeChild(document.getElementById(event.target.getElementsByTagName("img")[0].id + "rotation-arrow"));
     }
 }
 
 /* show connection guides when component is focused */
 function OnComponentFocus(event) {
     if(event.target.parentElement.getElementsByTagName("div").length == 0) {
-        var upperRightRotationArrow = document.createElement("div");
-        upperRightRotationArrow.className = "component-upper-right-rotation-arrow";
-        upperRightRotationArrow.innerHTML = "⤻";
-        upperRightRotationArrow.id = event.target.getElementsByTagName("img")[0].id + "upper-right-rotation-arrow";
-        upperRightRotationArrow.addEventListener("mouseenter", OnComponentRotationArrowEnter);
-        upperRightRotationArrow.addEventListener("mouseleave", OnComponentRotationArrowLeave);
-        event.target.appendChild(upperRightRotationArrow);
-
-        var upperLeftRotationArrow = document.createElement("div");
-        upperLeftRotationArrow.className = "component-upper-left-rotation-arrow";
-        upperLeftRotationArrow.innerHTML = "⤺";
-        upperLeftRotationArrow.id = event.target.getElementsByTagName("img")[0].id + "upper-left-rotation-arrow";
-        upperLeftRotationArrow.addEventListener("mouseenter", OnComponentRotationArrowEnter);
-        upperLeftRotationArrow.addEventListener("mouseleave", OnComponentRotationArrowLeave);
-        event.target.appendChild(upperLeftRotationArrow);
-
-        var bottomLeftRotationArrow = document.createElement("div");
-        bottomLeftRotationArrow.className = "component-bottom-left-rotation-arrow";
-        bottomLeftRotationArrow.innerHTML = "⤻";
-        bottomLeftRotationArrow.id = event.target.getElementsByTagName("img")[0].id + "bottom-left-rotation-arrow";
-        bottomLeftRotationArrow.addEventListener("mouseenter", OnComponentRotationArrowEnter);
-        bottomLeftRotationArrow.addEventListener("mouseleave", OnComponentRotationArrowLeave);
-        event.target.appendChild(bottomLeftRotationArrow);
-
-        var bottomRightRotationArrow = document.createElement("div");
-        bottomRightRotationArrow.className = "component-bottom-right-rotation-arrow";
-        bottomRightRotationArrow.innerHTML = "⤻";
-        bottomRightRotationArrow.id = event.target.getElementsByTagName("img")[0].id + "bottom-right-rotation-arrow";
-        bottomRightRotationArrow.addEventListener("mouseenter", OnComponentRotationArrowEnter);
-        bottomRightRotationArrow.addEventListener("mouseleave", OnComponentRotationArrowLeave);
-        event.target.appendChild(bottomRightRotationArrow);
+        var RotationArrow = document.createElement("div");
+        RotationArrow.className = "component-rotation-arrow";
+        RotationArrow.innerHTML = "↻";
+        RotationArrow.id = event.target.getElementsByTagName("img")[0].id + "rotation-arrow";
+        RotationArrow.addEventListener("mouseenter", OnComponentRotationArrowEnter);
+        RotationArrow.addEventListener("mouseleave", OnComponentRotationArrowLeave);
+        RotationArrow.addEventListener("click", OnComponentRotationArrowClick);
+        event.target.appendChild(RotationArrow);
 
         var leftCircle = document.createElement("div");
         leftCircle.className = "component-left-circle";
@@ -249,10 +196,7 @@ function OnComponentFocus(event) {
 function OnComponentBlur(event) {
     event.target.parentElement.removeChild(document.getElementById(event.target.id + "left-circle"));
     event.target.parentElement.removeChild(document.getElementById(event.target.id + "right-circle"));
-    event.target.parentElement.removeChild(document.getElementById(event.target.id + "upper-right-rotation-arrow"));
-    event.target.parentElement.removeChild(document.getElementById(event.target.id + "upper-left-rotation-arrow"));
-    event.target.parentElement.removeChild(document.getElementById(event.target.id + "bottom-left-rotation-arrow"));
-    event.target.parentElement.removeChild(document.getElementById(event.target.id + "bottom-right-rotation-arrow"));
+    event.target.parentElement.removeChild(document.getElementById(event.target.id + "rotation-arrow"));
 }
 
 /* start drawing a connection when user clicks on a connection guide */
@@ -314,4 +258,24 @@ function OnComponentRotationArrowEnter(event) {
 
 function OnComponentRotationArrowLeave(event) {
     document.body.style.cursor = "default";
+}
+
+function OnComponentRotationArrowClick(event) {
+    var circuitContainer = document.getElementById("circuit-container");
+    circuitContainer.addEventListener("mousemove", OnComponentRotationMove);
+    localStorage.setItem("rotatedComponentID", event.target.parentElement.getElementsByTagName("img")[0].id);
+    localStorage.setItem("clickedArrowX", event.target.offsetLeft.toString());
+    localStorage.setItem("clickedArrowY", event.target.offsetTop.toString());
+}
+
+function OnComponentRotationMove(event) {
+    var circuitContainer = document.getElementById("circuit-container");
+    var rotatedComponent = document.getElementById(localStorage.getItem("rotatedComponentID"));
+    var clickedArrowX = parseInt(localStorage.getItem("clickedArrowX"));
+    var clickedArrowY = parseInt(localStorage.getItem("clickedArrowY"));
+    var y = event.pageY - circuitContainer.scrollTop - circuitContainer.offsetTop - clickedArrowX;
+    var x = event.pageX - circuitContainer.scrollLeft - circuitContainer.offsetLeft - clickedArrowY;
+
+    // movementAngle = Math.round(movementAngle / 45) * 45;
+    // rotatedComponent.style.transform = "rotate(" + movementAngle.toString() + "deg)";
 }
