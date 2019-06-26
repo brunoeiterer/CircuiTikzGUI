@@ -34,6 +34,7 @@ body {
 .component {
 	font-size: 12px;
 	position: absolute;
+	transform: rotate(0deg);
 }
 
 .component:focus {
