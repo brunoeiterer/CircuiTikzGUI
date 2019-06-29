@@ -234,13 +234,13 @@ function OnKeyDownEvent(event) {
     }
 
     /* R pressed event */
-    /* rotates focused component by 45 degrees*/
+    /* rotates focused component by 90 degrees*/
     if(event.keyCode == 82) {
         var focusedComponent = document.activeElement;
         var x = parseFloat(getComputedStyle(focusedComponent.parentElement).getPropertyValue("transform").slice(7, -1).split(",")[0]);
         var y = parseFloat(getComputedStyle(focusedComponent.parentElement).getPropertyValue("transform").slice(7, -1).split(",")[1]);
         var currentRotation = 180 / Math.PI * Math.atan2(y, x);
-        var newRotation = Math.round(currentRotation + 45);
+        var newRotation = Math.round(currentRotation + 90);
         focusedComponent.parentElement.style.transform = "rotate(" + newRotation + "deg)";
     }
 }
