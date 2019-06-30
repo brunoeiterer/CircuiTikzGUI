@@ -81,13 +81,39 @@ function ElementDrag(event) {
     var baseCircuitContainer = document.getElementById("base-circuit-container");
     var gridSize = parseInt(getComputedStyle(circuitContainer).getPropertyValue("--grid-size"));
 
+    /* set offsets for component positioning. These are necessary because the leg of the component has to be snapped to the grid
+    and not the container edge. */
+    var leftOffset = 0;
+    var topOffset = 9;
+    var draggedComponent = document.getElementById(localStorage.getItem("draggedElement"));
+    var x = parseFloat(getComputedStyle(draggedComponent).getPropertyValue("transform").slice(7, -1).split(",")[0]);
+    var y = parseFloat(getComputedStyle(draggedComponent).getPropertyValue("transform").slice(7, -1).split(",")[1]);
+    var currentRotation = Math.round(180 / Math.PI * Math.atan2(y, x));
+
+    if(currentRotation == 90) {
+        leftOffset = -8;
+        topOffset = 0;
+    }
+
+    if(currentRotation == 180) {
+        leftOffset = 0;
+        topOffset = 12;
+    }
+
+    if(currentRotation == -90) {
+        leftOffset = -12;
+        topOffset = 0;
+    }
+    
     /* round to the nearest grid line. Subtract the parent offset because the child offset is relative to the parent and
     add 5 to compensate the size of the components-container */
-    var left = Math.round((event.pageX - circuitContainer.offsetLeft) / gridSize) * gridSize + baseCircuitContainer.scrollLeft;
+    var left = Math.round((event.pageX - circuitContainer.offsetLeft + baseCircuitContainer.scrollLeft) / gridSize) * gridSize -
+                leftOffset;
 
     /* round to the nearest grid line. Subtract the parent offset because the child offset is relative to the parent and
     remove 9 to center and compensate the height difference between grid cells and the component */
-    var top = Math.round((event.pageY - circuitContainer.offsetTop + baseCircuitContainer.scrollTop) / gridSize) * gridSize - 9;
+    var top = Math.round((event.pageY - circuitContainer.offsetTop + baseCircuitContainer.scrollTop) / gridSize) * gridSize -
+                topOffset;
 
     /* keep component inside the circuit-container */
     var backgroundWidth = parseInt(getComputedStyle(circuitContainer).getPropertyValue("background-size"));
