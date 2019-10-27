@@ -19,11 +19,17 @@ function OnNewComponentClick(img) {
     }
     var newComponent = document.createElement("img");
     newComponent.id = img.src.slice(0, -4) + componentCounter.toString();
-    newComponent.src = img.src;
-    newComponent.className = "component"
+    newComponent.src = "images/" + img.alt + ".svg";
     newComponent.tabIndex = 0;
     newComponent.addEventListener("focus", OnComponentFocus);
     newComponent.addEventListener("blur", OnComponentBlur);
+
+    if(img.alt.indexOf("diagonal") != -1) {
+        newComponent.className = "diagonal-component";
+    }
+    else {
+        newComponent.className = "component";
+    }
 
     document.addEventListener("dragover", ElementDragOver);
 
@@ -84,27 +90,52 @@ function ElementDrag(event) {
     /* set offsets for component positioning. These are necessary because the leg of the component has to be snapped to the grid
     and not the container edge. */
     var leftOffset = 0;
-    var topOffset = 9;
+    var topOffset = 0;
     var draggedComponent = document.getElementById(localStorage.getItem("draggedElement"));
     var x = parseFloat(getComputedStyle(draggedComponent).getPropertyValue("transform").slice(7, -1).split(",")[0]);
     var y = parseFloat(getComputedStyle(draggedComponent).getPropertyValue("transform").slice(7, -1).split(",")[1]);
     var currentRotation = Math.round(180 / Math.PI * Math.atan2(y, x));
 
-    if(currentRotation == 90) {
-        leftOffset = -8;
-        topOffset = 0;
+    if(document.getElementById(localStorage.getItem("draggedElement")).getElementsByTagName("img")[0].className == 
+    "component") {
+
+        topOffset = 9;
+
+        if(currentRotation == 90) {
+            leftOffset = -8;
+            topOffset = 0;
+        }
+
+        if(currentRotation == 180) {
+            leftOffset = 0;
+            topOffset = 12;
+        }
+
+        if(currentRotation == -90) {
+            leftOffset = -12;
+            topOffset = 0;
+        }
     }
 
-    if(currentRotation == 180) {
-        leftOffset = 0;
-        topOffset = 12;
-    }
+    if(document.getElementById(localStorage.getItem("draggedElement")).getElementsByTagName("img")[0].className == 
+    "diagonal-component") {
 
-    if(currentRotation == -90) {
-        leftOffset = -12;
-        topOffset = 0;
+        if(currentRotation == 90) {
+            leftOffset = 2;
+            topOffset = 2.5;
+        }
+
+        if(currentRotation == 180) {
+            leftOffset = 0;
+            topOffset = 4;
+        }
+
+        if(currentRotation == -90) {
+            leftOffset = -2;
+            topOffset = 2.5;
+        }
     }
-    
+        
     /* round to the nearest grid line. Subtract the parent offset because the child offset is relative to the parent and
     add 5 to compensate the size of the components-container */
     var left = Math.round((event.pageX - circuitContainer.offsetLeft + baseCircuitContainer.scrollLeft) / gridSize) * gridSize -
@@ -153,19 +184,37 @@ function preloadGhostImage() {
    connection guides are also shown when the component is focused, so a check is perfomed to avoid showing duplicates */
 function OnComponentMouseEnter(event) {
     if(!document.activeElement.isEqualNode(event.target.getElementsByTagName("img")[0])) {
-        var leftCircle = document.createElement("div");
-        leftCircle.className = "component-left-circle";
-        leftCircle.innerText = "●";
-        leftCircle.id = event.target.getElementsByTagName("img")[0].id + "left-circle";
-        leftCircle.addEventListener("click", OnComponentConnectionClick);
-        event.target.appendChild(leftCircle);
-    
-        var rightCircle = document.createElement("div");
-        rightCircle.className = "component-right-circle";
-        rightCircle.innerText = "●";
-        rightCircle.id = event.target.getElementsByTagName("img")[0].id + "right-circle";
-        rightCircle.addEventListener("click", OnComponentConnectionClick);
-        event.target.appendChild(rightCircle);
+      
+        if(event.target.getElementsByTagName("img")[0].className == "diagonal-component") {
+            var leftCircle = document.createElement("div");
+            leftCircle.className = "diagonal-component-left-circle";
+            leftCircle.innerText = "●";
+            leftCircle.id = event.target.getElementsByTagName("img")[0].id + "left-circle";
+            leftCircle.addEventListener("click", OnComponentConnectionClick);
+            event.target.appendChild(leftCircle);
+        
+            var rightCircle = document.createElement("div");
+            rightCircle.className = "diagonal-component-right-circle";
+            rightCircle.innerText = "●";
+            rightCircle.id = event.target.getElementsByTagName("img")[0].id + "right-circle";
+            rightCircle.addEventListener("click", OnComponentConnectionClick);
+            event.target.appendChild(rightCircle);
+        }
+        else if(event.target.getElementsByTagName("img")[0].className == "component") {
+            var leftCircle = document.createElement("div");
+            leftCircle.className = "component-left-circle";
+            leftCircle.innerText = "●";
+            leftCircle.id = event.target.getElementsByTagName("img")[0].id + "left-circle";
+            leftCircle.addEventListener("click", OnComponentConnectionClick);
+            event.target.appendChild(leftCircle);
+        
+            var rightCircle = document.createElement("div");
+            rightCircle.className = "component-right-circle";
+            rightCircle.innerText = "●";
+            rightCircle.id = event.target.getElementsByTagName("img")[0].id + "right-circle";
+            rightCircle.addEventListener("click", OnComponentConnectionClick);
+            event.target.appendChild(rightCircle);
+        }
     }
 }
 
