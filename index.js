@@ -1,3 +1,5 @@
+const { ipcRenderer } = require('electron');
+
 function OnNewComponentMouseOver() {
     document.body.style.cursor = "pointer";
 }
@@ -319,3 +321,11 @@ function OnKeyDownEvent(event) {
         focusedComponent.parentElement.style.transform = "rotate(" + newRotation + "deg)";
     }
 }
+
+/* use ipcRenderer to get components in the circuit-container */
+ipcRenderer.on('export', (event, data) => {
+    circuitContainer = document.getElementById('circuit-container');
+    componentContainerList = circuitContainer.children;
+
+    ipcRenderer.send("export", componentContainerList);
+})
